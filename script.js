@@ -1,3 +1,7 @@
+// =====================================
+// Sticky Navbar
+// =====================================
+
 const navbar = document.getElementById("navbar");
 
 window.addEventListener("scroll", () => {
@@ -13,30 +17,36 @@ window.addEventListener("scroll", () => {
     }
 
 });
+
+
+// =====================================
+// Active Menu
+// =====================================
+
 const sections = document.querySelectorAll("section");
 const navLinks = document.querySelectorAll(".menu a");
 
 window.addEventListener("scroll", () => {
 
-    let current="";
+    let current = "";
 
-    sections.forEach(section=>{
+    sections.forEach(section => {
 
-        const sectionTop=section.offsetTop-120;
+        const sectionTop = section.offsetTop - 120;
 
-        if(window.scrollY>=sectionTop){
+        if(window.scrollY >= sectionTop){
 
-            current=section.getAttribute("id");
+            current = section.getAttribute("id");
 
         }
 
     });
 
-    navLinks.forEach(link=>{
+    navLinks.forEach(link => {
 
         link.classList.remove("active");
 
-        if(link.getAttribute("href")==="#" + current){
+        if(link.getAttribute("href") === "#" + current){
 
             link.classList.add("active");
 
@@ -45,9 +55,76 @@ window.addEventListener("scroll", () => {
     });
 
 });
-const animatedElements=document.querySelectorAll(".from-left,.from-right,.from-bottom");
 
-const observer=new IntersectionObserver((entries)=>{
+
+// =====================================
+// Mobile Menu
+// =====================================
+
+const menuToggle = document.getElementById("menuToggle");
+const menu = document.querySelector(".menu");
+
+menuToggle.addEventListener("click", () => {
+
+    menu.classList.toggle("active");
+
+});
+
+
+// Menü linkine basınca otomatik kapansın
+
+navLinks.forEach(link => {
+
+    link.addEventListener("click", () => {
+
+        menu.classList.remove("active");
+
+    });
+
+});
+
+
+// =====================================
+// Dark Mode
+// =====================================
+
+const themeToggle = document.getElementById("themeToggle");
+
+if(localStorage.getItem("theme") === "dark"){
+
+    document.body.classList.add("dark");
+    themeToggle.textContent = "☀️";
+
+}
+
+themeToggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark");
+
+    if(document.body.classList.contains("dark")){
+
+        localStorage.setItem("theme","dark");
+        themeToggle.textContent = "☀️";
+
+    }else{
+
+        localStorage.setItem("theme","light");
+        themeToggle.textContent = "🌙";
+
+    }
+
+});
+
+
+// =====================================
+// Scroll Reveal
+// =====================================
+
+const hiddenElements = document.querySelectorAll(
+".from-left,.from-right,.from-bottom"
+);
+
+const observer = new IntersectionObserver(entries=>{
 
     entries.forEach(entry=>{
 
@@ -60,14 +137,18 @@ const observer=new IntersectionObserver((entries)=>{
     });
 
 },{
-    threshold:0.2
+    threshold:.2
 });
 
-animatedElements.forEach(element=>{
+hiddenElements.forEach(element=>{
 
     observer.observe(element);
 
 });
+// =====================================
+// Back To Top Button
+// =====================================
+
 const topBtn = document.getElementById("topBtn");
 
 window.addEventListener("scroll", () => {
@@ -89,17 +170,22 @@ topBtn.addEventListener("click", () => {
     window.scrollTo({
 
         top:0,
-
         behavior:"smooth"
 
     });
 
 });
-const form = document.getElementById("contactForm");
+
+
+// =====================================
+// Contact Form
+// =====================================
+
+const contactForm = document.getElementById("contactForm");
 const submitBtn = document.getElementById("submitBtn");
 const formMessage = document.getElementById("formMessage");
 
-form.addEventListener("submit", function(e){
+contactForm.addEventListener("submit", function(e){
 
     e.preventDefault();
 
@@ -110,90 +196,66 @@ form.addEventListener("submit", function(e){
 
         submitBtn.textContent = "✔ Message Sent";
 
-        formMessage.textContent = "Your message has been sent successfully!";
-        formMessage.classList.add("show");
+        formMessage.textContent =
+        "Thank you! We will contact you soon.";
 
-        form.reset();
+        formMessage.style.color = "green";
+
+        contactForm.reset();
 
         setTimeout(() => {
 
             submitBtn.disabled = false;
             submitBtn.textContent = "Send Message";
-
-            formMessage.classList.remove("show");
+            formMessage.textContent = "";
 
         },2500);
 
     },1800);
 
 });
-const themeBtn = document.getElementById("themeToggle");
 
-// Sayfa açılırken kayıtlı temayı yükle
-if(localStorage.getItem("theme") === "dark"){
 
-    document.body.classList.add("dark");
-    themeBtn.textContent = "☀️";
-
-}
-
-themeBtn.addEventListener("click",()=>{
-
-    document.body.classList.toggle("dark");
-
-    if(document.body.classList.contains("dark")){
-
-        localStorage.setItem("theme","dark");
-        themeBtn.textContent="☀️";
-
-    }else{
-
-        localStorage.setItem("theme","light");
-        themeBtn.textContent="🌙";
-
-    }
-
-});
-
-// ===========================
+// =====================================
 // Menu Filter
-// ===========================
+// =====================================
 
-const filterButtons = document.querySelectorAll(".filter-btn");
-const cards = document.querySelectorAll(".card");
+const filterButtons =
+document.querySelectorAll(".filter-btn");
 
-filterButtons.forEach(button => {
+const cards =
+document.querySelectorAll(".card");
 
-    button.addEventListener("click", () => {
+filterButtons.forEach(button=>{
 
-        filterButtons.forEach(btn => btn.classList.remove("active"));
+    button.addEventListener("click",()=>{
+
+        filterButtons.forEach(btn=>{
+
+            btn.classList.remove("active");
+
+        });
+
         button.classList.add("active");
 
-        const filter = button.dataset.filter;
+        const filter =
+        button.dataset.filter;
 
-        cards.forEach(card => {
+        cards.forEach(card=>{
 
-            if(filter === "all" || card.dataset.category === filter){
+            if(
 
-                card.style.display = "";
+                filter==="all" ||
 
-                setTimeout(()=>{
+                card.dataset.category===filter
 
-                    card.classList.remove("hide");
-                    card.classList.add("show");
+            ){
 
-                },20);
+                card.style.display="flex";
 
             }else{
 
-                card.classList.remove("show");
-                card.classList.add("hide");
-
-                setTimeout(()=>{
-
-                    card.style.display="none";
-
-                },300);
+                card.style.display="none";
 
             }
 
@@ -202,24 +264,14 @@ filterButtons.forEach(button => {
     });
 
 });
-// ===========================
-// Hamburger Menu
-// ===========================
 
-const menuToggle = document.getElementById("menuToggle");
-const menu = document.querySelector(".menu");
 
-menuToggle.addEventListener("click",()=>{
+// =====================================
+// Smooth Fade In
+// =====================================
 
-    menu.classList.toggle("active");
+window.addEventListener("load",()=>{
 
-});
-navLinks.forEach(link=>{
-
-    link.addEventListener("click",()=>{
-
-        menu.classList.remove("active");
-
-    });
+    document.body.style.opacity="1";
 
 });
